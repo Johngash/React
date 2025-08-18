@@ -25,7 +25,12 @@ function App() {
   }, [searchMovie, page]); // refetch when searchMovie changes
 
   return (
-    <div className={`${darkMode} flex flex-col min-h-[100vh] items-center dark:bg-slate-950 dark:text-white transition-colors duration-300 ease-in`}>
+    <div
+      onScroll={(e) => {
+        console.log("Scrolled: ", e.target.scrollTop);
+      }}
+      className={`${darkMode} flex flex-col min-h-[100vh] items-center overflow-x-hidden dark:bg-slate-950 dark:text-white transition-colors duration-300 ease-in`}
+    >
       <LightDark mode={darkMode} setMode={setDarkMode} />
       <Pages />
       <SearchBar
@@ -46,7 +51,11 @@ function App() {
           <p>Loading...</p>
         )}
       </div>
-      <Pagination page={page} setPage={setPage} totalResults={movieData?.totalResults} />
+      <Pagination
+        page={page}
+        setPage={setPage}
+        totalResults={movieData?.totalResults}
+      />
     </div>
   );
 }

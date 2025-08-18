@@ -2,65 +2,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 function Pagination({ page, setPage, totalResults }) {
-  const pages = Math.ceil(totalResults / 10);
-  console.log("results ", pages);
+  const pages = Math.ceil(totalResults / 10); // total number of pages
+  const start = Math.floor((page - 1) / 10) * 10 + 1; // first page in the current block
+  const end = Math.min(start + 9, pages); // last page in the block
+
+  const displayed = [];
+  for (let i = start; i <= end; i++) {
+    displayed.push(i);
+  }
+
   return (
-    <div className="flex justify-center items-center gap-10 w-full h-20  bg-slate-100 m-5 dark:bg-slate-800">
-      {page > 1 && (
+    <div className="flex justify-center items-center gap-2 w-full h-20 bg-slate-100 m-5 dark:bg-slate-800">
+      {start > 1 && (
         <FontAwesomeIcon
           icon={faCaretLeft}
           className="text-2xl cursor-pointer"
-          onClick={() => {
-            setPage((current) => current + 1);
-          }}
+          onClick={() => setPage(start - 10)}
         />
       )}
 
-      <button
-        onClick={() => setPage(1)}
-        className="bg-gray-500 py-2 px-3 rounded-[3px] cursor-pointer"
-      >
-        1
-      </button>
-      <span>....</span>
-      {page == 1 && (
+      {displayed.map((d) => (
         <button
-          onClick={() => setPage(Math.ceil(pages / 2))}
-          className="bg-gray-500 py-2 px-3 rounded-[3px] cursor-pointer"
+          key={d}
+          onClick={() => setPage(d)}
+          className={`py-2 px-[4px] md:px-3 rounded-[3px] cursor-pointer ${
+            d === page ? "bg-blue-500 text-white" : "bg-gray-500"
+          }`}
         >
-          {Math.ceil(pages / 2)}
+          {d}
         </button>
-      )}
-      <button
-        onClick={() => setPage(Math.ceil(pages / 2))}
-        className="bg-gray-500 py-2 px-3 rounded-[3px] cursor-pointer"
-      >
-        {Math.ceil(pages / 2)}
-      </button>
+      ))}
 
-      {/* {Array.from({ length: pages }, (_, i) => ( */}
-      {/*   <button */}
-      {/*     onClick={() => setPage(i)} */}
-      {/*     key={i} */}
-      {/*     className="bg-gray-500 py-2 px-3 rounded-[3px]" */}
-      {/*   > */}
-      {/*     {i + 1} */}
-      {/*   </button> */}
-      {/* ))} */}
-      <span>....</span>
-      <button
-        onClick={() => setPage(pages)}
-        className="bg-gray-500 py-2 px-3 rounded-[3px] cursor-pointer"
-      >
-        {pages}
-      </button>
-      {page < pages && (
+      {end < pages && (
         <FontAwesomeIcon
           icon={faCaretRight}
           className="text-2xl cursor-pointer"
-          onClick={() => {
-            setPage((current) => current + 1);
-          }}
+          onClick={() => setPage(end + 1)}
         />
       )}
     </div>

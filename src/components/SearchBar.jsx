@@ -14,7 +14,7 @@ function SearchBar({ onSearch, movieNames }) {
     <div className="relative w-full bg-slate-200 flex justify-center items-center m-5 dark:bg-slate-900 ">
       <form
         onSubmit={submitSearch}
-        className="bg-slate-50 rounded-full relative px-14 py-2 flex h-[100%] justify-center items-center gap-2 m-5 dark:bg-slate-500 "
+        className="bg-slate-50 max-w-[90vw] rounded-full relative px-14 py-2 flex h-[100%] justify-center items-center gap-2 m-5 dark:bg-slate-500 "
       >
         <input
           onBlur={() => setShowDropdown(false)}
