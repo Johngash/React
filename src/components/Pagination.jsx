@@ -1,10 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
-function Pagination({ page, setPage, totalResults }) {
-  const pages = Math.ceil(totalResults / 10); // total number of pages
-  const start = Math.floor((page - 1) / 10) * 10 + 1; // first page in the current block
-  const end = Math.min(start + 9, pages); // last page in the block
+function Pagination({ page, setPage, totalPages }) {
+  const start = Math.floor((page - 1) / 10) * 10 + 1;
+  const end = Math.min(start + 9, totalPages);
 
   const displayed = [];
   for (let i = start; i <= end; i++) {
@@ -20,7 +19,6 @@ function Pagination({ page, setPage, totalResults }) {
           onClick={() => setPage(start - 10)}
         />
       )}
-
       {displayed.map((d) => (
         <button
           key={d}
@@ -32,12 +30,11 @@ function Pagination({ page, setPage, totalResults }) {
           {d}
         </button>
       ))}
-
-      {end < pages && (
+      {end < totalPages && (
         <FontAwesomeIcon
           icon={faCaretRight}
           className="text-2xl cursor-pointer"
-          onClick={() => setPage(end + 1)}
+          onClick={() => setPage(start + 10)}
         />
       )}
     </div>

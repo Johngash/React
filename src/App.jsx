@@ -11,40 +11,54 @@ function App() {
   const [page, setPage] = useState(1);
   const [darkMode, setDarkMode] = useState("dark");
 
-  searchMovie.trim() == "" && setSearchMovie("bat");
-
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_URL}&s=${searchMovie}&page=${page}`)
+    setMovieData(null);
+    searchMovie.trim() == "" && setSearchMovie("bat");
+
+    fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/search/movie?api_key=${import.meta.env.VITE_TMDB_API_KEY}&query=${searchMovie}&page=${page}`,
+    )
       .then((res) => res.json())
       .then((data) => {
-        setMovieData(data);
-        console.log(data.Search);
-        console.log(data);
+        let keys = [];
+        let movies = [];
+
+        console.log("Data:\n" + JSON.stringify(data));
+
+        data.results.forEach((element) => {
+          if (!keys.includes(element.id)) {
+            keys.push(element.id);
+            movies.push(element);
+          }
+        });
+        let movieData = {
+          ...data,
+          results: movies,
+        };
+        setMovieData(movieData);
+        console.log("MoviesData:\n" + JSON.stringify(movieData));
       })
-      .catch((err) => console.error(err));
-  }, [searchMovie, page]); // refetch when searchMovie changes
+      .catch((err) => console.log(err));
+  }, [searchMovie, page]);
 
   return (
     <div
-      onScroll={(e) => {
-        console.log("Scrolled: ", e.target.scrollTop);
-      }}
       className={`${darkMode} flex flex-col min-h-[100vh] items-center overflow-x-hidden dark:bg-slate-950 dark:text-white transition-colors duration-300 ease-in`}
     >
       <LightDark mode={darkMode} setMode={setDarkMode} />
       <Pages />
       <SearchBar
         onSearch={setSearchMovie}
-        movieNames={movieData?.Search || []}
+        movieNames={movieData?.results || []}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-9 justify-center">
-        {movieData?.Search?.length > 0 ? (
-          movieData.Search.map((movie) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-9 justify-center">
+        {movieData?.results?.length > 0 ? (
+          movieData.results.map((movie) => (
             <MovieCard
-              key={movie.imdbID}
-              name={movie.Title}
-              imgUrl={movie.Poster}
-              year={movie.Year}
+              key={movie.id}
+              name={movie.title}
+              imgUrl={movie.poster_path}
+              date={movie.release_date}
             />
           ))
         ) : (
@@ -54,7 +68,7 @@ function App() {
       <Pagination
         page={page}
         setPage={setPage}
-        totalResults={movieData?.totalResults}
+        totalPages={movieData?.total_pages}
       />
     </div>
   );

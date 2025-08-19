@@ -37,16 +37,16 @@ function SearchBar({ onSearch, movieNames }) {
             {movieNames.length > 0 ? (
               movieNames.map((movie, index) => (
                 <div
-                  key={movie.imdbID}
+                  key={movie.id}
                   className={`mx-0 flex gap-2 py-1 items-center ${index % 2 == 0 ? "" : "bg-gray-200 dark:bg-slate-900"} w-[100%] hover:bg-slate-700 transition-colors duration-75`}
                   onClick={() => console.log(movie.Title)}
                 >
                   <img
-                    src={movie.Poster}
-                    alt={movie.Title}
+                    src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.poster_path}`}
+                    alt={movie.title}
                     className="h-15 ml-1 rounded-[5px] cursor-pointer"
                   />
-                  <p className="cursor-pointer self-start">{movie.Title}</p>
+                  <p className="cursor-pointer self-start">{movie.title}</p>
                 </div>
               ))
             ) : (
