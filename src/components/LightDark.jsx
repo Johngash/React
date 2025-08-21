@@ -7,7 +7,7 @@ function LightDark({ mode, setMode }) {
       onClick={() => {
         mode === "dark" ? setMode("") : setMode("dark");
       }}
-      className="flex items-center justify-center bg-gray-200 px-1.5 py-2 mt-2 fixed z-10 rounded-full blur-[0.7px]"
+      className="flex items-center justify-center bg-gray-200 px-1.5 py-2 mt-2 fixed z-10 rounded-full blur-[0.7px] cursor-pointer"
     >
       {mode === "dark" ? (
         <FontAwesomeIcon icon={faMoon} color="black" />

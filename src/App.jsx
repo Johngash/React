@@ -10,11 +10,14 @@ function App() {
   const [searchMovie, setSearchMovie] = useState("batman");
   const [page, setPage] = useState(1);
   const [darkMode, setDarkMode] = useState("dark");
+  const [isLoading, setIsLoading] = useState(false);
+  const [updateBody, setUpdateBody] = useState(false);
 
   useEffect(() => {
     setMovieData(null);
     searchMovie.trim() == "" && setSearchMovie("bat");
 
+    setIsLoading(true);
     fetch(
       `${import.meta.env.VITE_TMDB_BASE_URL}/search/movie?api_key=${import.meta.env.VITE_TMDB_API_KEY}&query=${searchMovie}&page=${page}`,
     )
@@ -39,6 +42,7 @@ function App() {
         console.log("MoviesData:\n" + JSON.stringify(movieData));
       })
       .catch((err) => console.log(err));
+    setIsLoading(false);
   }, [searchMovie, page]);
 
   return (
@@ -50,26 +54,32 @@ function App() {
       <SearchBar
         onSearch={setSearchMovie}
         movieNames={movieData?.results || []}
+        isLoading={isLoading}
+        setUpdateBody={setUpdateBody}
       />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-9 justify-center">
-        {movieData?.results?.length > 0 ? (
-          movieData.results.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              name={movie.title}
-              imgUrl={movie.poster_path}
-              date={movie.release_date}
-            />
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
-      <Pagination
-        page={page}
-        setPage={setPage}
-        totalPages={movieData?.total_pages}
-      />
+      {updateBody && (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-9 justify-center">
+            {movieData?.results?.length > 0 ? (
+              movieData.results.map((movie) => (
+                <MovieCard
+                  key={movie.id}
+                  name={movie.title}
+                  imgUrl={movie.poster_path}
+                  date={movie.release_date}
+                />
+              ))
+            ) : (
+              <p className="min-h-[60vh]">Loading...</p>
+            )}
+          </div>
+          <Pagination
+            page={page}
+            setPage={setPage}
+            totalPages={movieData?.total_pages}
+          />
+        </>
+      )}
     </div>
   );
 }
